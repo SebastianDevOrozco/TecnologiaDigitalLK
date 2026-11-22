@@ -136,4 +136,14 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+
+// --------------------------------
+// Ejecutar Seeder de datos iniciales
+// --------------------------------
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    DbSedder.Seed(context);
+}
+
 app.Run();
