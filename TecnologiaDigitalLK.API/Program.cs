@@ -1,10 +1,12 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using TecnologiaDigitalLK.API.Data;
-//using TecnologiaDigitalLK.API.Mapping;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
+using TecnologiaDigitalLK.API.Interfaces.Usuarios;
+using TecnologiaDigitalLK.API.Mapping;
+using TecnologiaDigitalLK.API.Servicios.Usuarios;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,13 +48,14 @@ builder.Services.AddAuthentication(options =>
 // Registro de servicios personalizados
 // --------------------------------
 
-
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 
 // --------------------------------
 //  Registro de AutoMapper
 // --------------------------------
 
-//builder.Services.AddAutoMapper(config => config.AddProfile<MappingProfile>());
+builder.Services.AddAutoMapper(config => config.AddProfile<MappingProfile>());
 
 builder.Services.AddHttpContextAccessor();
 
@@ -117,7 +120,7 @@ var app = builder.Build();
 // --------------------------------
 // Registrar el middleware de excepciones DE PRIMERO en el pipeline
 // --------------------------------
-//app.UseMiddleware<TecnologiaDigitalLK.API.Middleware.ErrorsMiddleware>();
+app.UseMiddleware<TecnologiaDigitalLK.API.Middleware.ErrorsMiddleware>();
 
 
 // Configure the HTTP request pipeline.
