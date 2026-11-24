@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using TecnologiaDigitalLK.API.DTOs.Categorias;
 using TecnologiaDigitalLK.API.DTOs.Usuarios;
 using TecnologiaDigitalLK.API.Modelos;
 
@@ -17,6 +18,15 @@ namespace TecnologiaDigitalLK.API.Mapping
                 .ForMember(dest => dest.SucursalNombre, opt => opt.MapFrom(src => src.Sucursal != null ? src.Sucursal.Nombre : "Global"));
             //Mapeo de UsuarioUpdate --> Usuario
             CreateMap<UsuarioUpdateDto, Usuario>();
+
+
+            //CATEGORIA//
+            //Mapeo de CategoriaCreateDto --> Categoria
+            CreateMap<CategoriaCreateDto, Categoria>();
+            //Mapeo de Categoria --> CategoriaReadDto
+            CreateMap<Categoria, CategoriaReadDto>();
+            //Mapeo de CategoriaUpdateDto --> Categoria
+            CreateMap<CategoriaUpdateDto, Categoria>();
 
         }
     }

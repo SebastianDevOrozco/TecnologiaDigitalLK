@@ -4,8 +4,10 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using TecnologiaDigitalLK.API.Data;
+using TecnologiaDigitalLK.API.Interfaces.Categorias;
 using TecnologiaDigitalLK.API.Interfaces.Usuarios;
 using TecnologiaDigitalLK.API.Mapping;
+using TecnologiaDigitalLK.API.Servicios.Categorias;
 using TecnologiaDigitalLK.API.Servicios.Usuarios;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -50,6 +52,7 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
+builder.Services.AddScoped<ICategoriaService, CategoriaService>();
 
 // --------------------------------
 //  Registro de AutoMapper

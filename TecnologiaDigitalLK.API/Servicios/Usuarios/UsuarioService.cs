@@ -53,9 +53,6 @@ namespace TecnologiaDigitalLK.API.Servicios.Usuarios
                 .Include(u => u.Sucursal)
                 .ToListAsync();
 
-            if (usuarios == null)
-                return new List<UsuarioReadDto>();
-
             return _mapper.Map<IEnumerable<UsuarioReadDto>>(usuarios);
         }
 
