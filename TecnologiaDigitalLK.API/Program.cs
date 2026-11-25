@@ -3,11 +3,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using TecnologiaDigitalLK.API.Configuracion;
 using TecnologiaDigitalLK.API.Data;
 using TecnologiaDigitalLK.API.Interfaces.Categorias;
+using TecnologiaDigitalLK.API.Interfaces.Imagenes;
 using TecnologiaDigitalLK.API.Interfaces.Usuarios;
 using TecnologiaDigitalLK.API.Mapping;
 using TecnologiaDigitalLK.API.Servicios.Categorias;
+using TecnologiaDigitalLK.API.Servicios.Imagenes;
 using TecnologiaDigitalLK.API.Servicios.Usuarios;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,8 +26,14 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // -------------------------------
 //  Configurar JWT
 // -------------------------------
-var jwtSettings = builder.Configuration.GetSection("Jwt");
-var key = Encoding.UTF8.GetBytes(jwtSettings["Key"]!);
+
+builder.Services.AddOptions<JwtSettings>()
+    .Bind(builder.Configuration.GetSection("Jwt"))
+    .ValidateDataAnnotations()
+    .ValidateOnStart();
+
+var jwtSettings = builder.Configuration.GetSection("Jwt").Get<JwtSettings>()!;
+var key = Encoding.UTF8.GetBytes(jwtSettings.Key);
 
 builder.Services.AddAuthentication(options =>
 {
@@ -39,12 +48,19 @@ builder.Services.AddAuthentication(options =>
         ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        ValidIssuer = jwtSettings["Issuer"],
-        ValidAudience = jwtSettings["Audience"],
+        ValidIssuer = jwtSettings.Issuer,
+        ValidAudience = jwtSettings.Audience,
         IssuerSigningKey = new SymmetricSecurityKey(key)
     };
 });
 
+
+// -------------------------------
+//  Configurar Cloudinary
+// -------------------------------
+
+builder.Services.Configure<CloudinarySettings>(
+    builder.Configuration.GetSection("CloudinarySettings"));
 
 // --------------------------------
 // Registro de servicios personalizados
@@ -53,6 +69,7 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<ICategoriaService, CategoriaService>();
+builder.Services.AddScoped<IImagenService, CloudinaryImagenService>();
 
 // --------------------------------
 //  Registro de AutoMapper

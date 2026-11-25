@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using TecnologiaDigitalLK.API.Configuracion;
 using TecnologiaDigitalLK.API.Data;
 using TecnologiaDigitalLK.API.DTOs.Usuarios;
 using TecnologiaDigitalLK.API.Interfaces.Usuarios;
@@ -16,13 +18,13 @@ namespace TecnologiaDigitalLK.API.Servicios.Usuarios
     {
         private readonly IMapper _mapper;
         private readonly AppDbContext _appDbContext;
-        private readonly IConfiguration _config; // esto es necesario para leer la clave jwt
+        private readonly JwtSettings _jwtSettings; // esto es necesario para leer la clave jwt
 
-        public AuthService(IMapper mapper, AppDbContext appDbContext, IConfiguration config)
+        public AuthService(IMapper mapper, AppDbContext appDbContext, IOptions<JwtSettings> jwtOptions)
         {
             _mapper = mapper;
             _appDbContext = appDbContext;
-            _config = config;
+            _jwtSettings = jwtOptions.Value;
 
         }
 
@@ -91,9 +93,7 @@ namespace TecnologiaDigitalLK.API.Servicios.Usuarios
 
         private string GenerarToken(Usuario usuario)
         {
-            // Leemos la configuración del appsettings.json
-            var jwtSettings = _config.GetSection("Jwt");
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]!));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             // Información que irá dentro del token 
@@ -107,8 +107,8 @@ namespace TecnologiaDigitalLK.API.Servicios.Usuarios
 
             // Armamos el token
             var token = new JwtSecurityToken(
-                issuer: jwtSettings["Issuer"],
-                audience: jwtSettings["Audience"],
+                issuer: _jwtSettings.Issuer,
+                audience: _jwtSettings.Audience,
                 claims: claims,
                 expires: DateTime.UtcNow.AddDays(1), // El token expira en 1 día
                 signingCredentials: creds
