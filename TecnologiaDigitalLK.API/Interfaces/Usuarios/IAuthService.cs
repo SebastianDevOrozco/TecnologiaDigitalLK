@@ -6,5 +6,6 @@ namespace TecnologiaDigitalLK.API.Interfaces.Usuarios
     {
         Task<UsuarioReadDto> RegistrarUsuario(UsuarioCreateDto usuarioCreateDto);
         Task<string?> Login(string UserName, string Password);
+        Task<UsuarioReadDto> ObtenerUsuarioPorIdAsync(int id);
     }
 }

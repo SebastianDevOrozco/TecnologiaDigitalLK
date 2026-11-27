@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using TecnologiaDigitalLK.API.DTOs.Categorias;
+using TecnologiaDigitalLK.API.DTOs.Productos;
 using TecnologiaDigitalLK.API.DTOs.Usuarios;
 using TecnologiaDigitalLK.API.Modelos;
 
@@ -27,6 +28,12 @@ namespace TecnologiaDigitalLK.API.Mapping
             CreateMap<Categoria, CategoriaReadDto>();
             //Mapeo de CategoriaUpdateDto --> Categoria
             CreateMap<CategoriaUpdateDto, Categoria>();
+
+            //PRODUCTO
+            CreateMap<ProductoCreateDto, Producto>()
+                .ForMember(dest => dest.ImagenRuta, opt => opt.Ignore());
+
+            CreateMap<Producto, ProductoReadDto>();
 
         }
     }

@@ -70,6 +70,19 @@ namespace TecnologiaDigitalLK.API.Servicios.Usuarios
             return GenerarToken(usuario);
         }
 
+        public async Task<UsuarioReadDto> ObtenerUsuarioPorIdAsync(int id)
+        {
+            var usuario = await _appDbContext.Usuarios
+                .AsNoTracking()
+                .Include(u => u.Sucursal)
+                .FirstOrDefaultAsync(u => u.Id == id);
+
+            if (usuario == null)
+                throw new KeyNotFoundException($"No se encontró el usuario con ID {id}.");
+
+            return _mapper.Map<UsuarioReadDto>(usuario);
+        }
+
         private async Task ValidarUsuario(UsuarioCreateDto usuario)
         {
             //validar si el correo ya existe

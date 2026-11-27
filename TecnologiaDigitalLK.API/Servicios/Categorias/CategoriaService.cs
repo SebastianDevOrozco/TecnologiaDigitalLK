@@ -38,6 +38,18 @@ namespace TecnologiaDigitalLK.API.Servicios.Categorias
             return _mapper.Map<IEnumerable<CategoriaReadDto>>(categorias);
         }
 
+        public async Task<CategoriaReadDto> ObtenerCategoriaPorIdAsync(int id)
+        {
+            var categoria = await _appDbContext.Categorias
+                .AsNoTracking()
+                .FirstOrDefaultAsync(c => c.Id == id);
+
+            if (categoria == null)
+                throw new KeyNotFoundException($"No se encontró la categoría con ID {id}.");
+
+            return _mapper.Map<CategoriaReadDto>(categoria);
+        }
+
         public async Task<CategoriaReadDto> ActualizarCategoria(int categoriaId, CategoriaUpdateDto categoriaUpdateDto)
         {
             var categoria = await ValidarExistenciaCategoria(categoriaId);

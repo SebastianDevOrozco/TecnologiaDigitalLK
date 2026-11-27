@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using TecnologiaDigitalLK.API.DTOs.Usuarios;
 using TecnologiaDigitalLK.API.Interfaces.Usuarios;
+using TecnologiaDigitalLK.API.Servicios.Usuarios;
 
 namespace TecnologiaDigitalLK.API.Controllers.Usuarios
 {
@@ -21,8 +22,8 @@ namespace TecnologiaDigitalLK.API.Controllers.Usuarios
         public async Task<ActionResult<UsuarioReadDto>> Registrar(UsuarioCreateDto usuarioCreateDto)
         {
 
-            var resultado = await _authService.RegistrarUsuario(usuarioCreateDto);
-            return Ok(resultado);
+            var usuarioCreado = await _authService.RegistrarUsuario(usuarioCreateDto);
+            return CreatedAtAction(nameof(ObtenerUsuarioPorId), new { id = usuarioCreado.Id }, usuarioCreado);
         }
 
         [AllowAnonymous]
@@ -31,6 +32,13 @@ namespace TecnologiaDigitalLK.API.Controllers.Usuarios
         {
             var token = await _authService.Login(loginDto.Username, loginDto.PasswordHash);
             return Ok(new { token });
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<UsuarioReadDto>> ObtenerUsuarioPorId(int id)
+        {
+            var usuario = await _authService.ObtenerUsuarioPorIdAsync(id);
+            return Ok(usuario);
         }
     }
 }

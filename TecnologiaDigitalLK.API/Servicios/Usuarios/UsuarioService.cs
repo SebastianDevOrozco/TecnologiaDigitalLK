@@ -56,6 +56,8 @@ namespace TecnologiaDigitalLK.API.Servicios.Usuarios
             return _mapper.Map<IEnumerable<UsuarioReadDto>>(usuarios);
         }
 
+       
+
         private async Task<Usuario> VerificarUsuario(int id)
         {
             var usuario = await _appDbContext.Usuarios

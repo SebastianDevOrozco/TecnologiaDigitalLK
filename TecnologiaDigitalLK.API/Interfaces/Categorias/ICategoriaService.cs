@@ -9,6 +9,7 @@ namespace TecnologiaDigitalLK.API.Interfaces.Categorias
 
         //LEER
         Task<IEnumerable<CategoriaReadDto>> ListarCategorias();
+        Task<CategoriaReadDto> ObtenerCategoriaPorIdAsync(int id);
 
         //ACTUALIZAR
         Task<CategoriaReadDto> ActualizarCategoria(int categoriaId, CategoriaUpdateDto categoriaUpdateDto);

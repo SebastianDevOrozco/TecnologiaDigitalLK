@@ -9,6 +9,7 @@
         public string Codigo { get; set; } = string.Empty;
         public string Nombre { get; set; } = string.Empty;
         public string? ImagenRuta { get; set; }
+        public string? ImagenPublicId { get; set; }
 
         public decimal CostoAdquisicion { get; set; }
         public decimal PrecioDetal { get; set; }

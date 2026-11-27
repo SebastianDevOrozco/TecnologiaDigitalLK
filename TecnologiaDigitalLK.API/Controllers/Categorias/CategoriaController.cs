@@ -32,6 +32,13 @@ namespace TecnologiaDigitalLK.API.Controllers.Categorias
             return Ok(categorias);
         }
 
+        [HttpGet("{id}")]
+        public async Task<ActionResult<CategoriaReadDto>> ObtenerCategoriaPorId(int id)
+        {
+            var categoria = await _categoriaService.ObtenerCategoriaPorIdAsync(id);
+            return CreatedAtAction(nameof(ObtenerCategoriaPorId), new { id = categoria.Id }, categoria);
+        }
+
         [HttpPut("{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<CategoriaReadDto>> ActualizarCategoria(int id, CategoriaUpdateDto updateDto)
